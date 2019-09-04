@@ -40,6 +40,8 @@ public class ScrapingSport {
 		// elemento raiz
 		org.w3c.dom.Document doc = docBuilder.newDocument();
 		org.w3c.dom.Element rootElement = doc.createElement("game");
+		rootElement.setAttribute("tournament", "SN");
+		rootElement.setAttribute("season", "2019-2020");
 		doc.appendChild(rootElement);
 
 //		if (getStatusConnectionCode(url) == 200) {
@@ -88,7 +90,7 @@ public class ScrapingSport {
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		DOMSource source = new DOMSource(doc);
-		String ruta = "outData\\";
+		String ruta = "outData\\sn20192020\\";
 		StreamResult result = new StreamResult(new File(ruta, nombreFichero + ".xml"));
 
 		// StreamResult result = new StreamResult(new File("archivo.xml"));
@@ -150,7 +152,7 @@ public class ScrapingSport {
 
 	public static Document getHtmlFileToDocument(String file) {
 
-		File input = new File("inData/" + file);
+		File input = new File("inData/sn20192020/" + file);
 		Document doc = null;
 		try {
 			doc = Jsoup.parse(input, "UTF-8", "http://example.com/");
