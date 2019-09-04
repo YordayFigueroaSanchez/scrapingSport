@@ -91,7 +91,7 @@ public class ScrapingSport {
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
 		DOMSource source = new DOMSource(doc);
-		String ruta = "outData\\";
+		String ruta = "outData\\mlb2019\\";
 		StreamResult result = new StreamResult(new File(ruta, nombreFichero + ".xml"));
 
 		// StreamResult result = new StreamResult(new File("archivo.xml"));
@@ -153,7 +153,7 @@ public class ScrapingSport {
 
 	public static Document getHtmlFileToDocument(String file) {
 
-		File input = new File("inData/" + file);
+		File input = new File("inData/mlb2019/" + file);
 		Document doc = null;
 		try {
 			doc = Jsoup.parse(input, "UTF-8", "http://example.com/");
