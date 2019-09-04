@@ -40,6 +40,9 @@ public class ScrapingSport {
 		// elemento raiz
 		org.w3c.dom.Document doc = docBuilder.newDocument();
 		org.w3c.dom.Element rootElement = doc.createElement("game");
+		rootElement.setAttribute("tournament", "MLB");
+		rootElement.setAttribute("season", "2019");
+		
 		doc.appendChild(rootElement);
 
 //		if (getStatusConnectionCode(url) == 200) {
