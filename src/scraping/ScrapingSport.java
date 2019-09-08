@@ -22,6 +22,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.w3c.dom.Attr;
+import org.w3c.dom.Node;
 
 public class ScrapingSport {
 
@@ -51,9 +52,14 @@ public class ScrapingSport {
 			Document documento = getHtmlFileToDocument(file);
 
 //			Analizando el grupo de bateadores del team VS
-//			Elements elementosOffensiveVs = documento
-//					.select("table[id=MainContent_Estado_Juego_Tabs_ctl44_BoxScore_Bateo_VS_DXMainTable] > tbody > tr");
-//			System.out.println(elementosOffensiveVs.size());
+			Elements statsTwoTeam = documento
+					.select("section > div.team-content");
+			System.out.println(statsTwoTeam.size());
+			rootElement.appendChild(extractStatsOfTeamToXml( statsTwoTeam.get(0), doc));
+			rootElement.appendChild(extractStatsOfTeamToXml( statsTwoTeam.get(1), doc));
+			
+			Elements playToPlay = documento.select("div.play-by-play_content");
+			System.out.println(playToPlay.size());
 //			rootElement.appendChild(extractOffensiveHtmlToXml( elementosOffensiveVs, doc));
 //			
 //			Analizando el grupo de bateadores del team HC
@@ -105,6 +111,8 @@ public class ScrapingSport {
 		System.out.println("File saved!");
 
 	}
+
+	
 
 	/**
 	 * Con esta método compruebo el Status code de la respuesta que recibo al hacer
@@ -160,6 +168,78 @@ public class ScrapingSport {
 			System.out.println("Excepción al obtener el HTML de la página" + ex.getMessage());
 		}
 		return doc;
+	}
+	
+	private static org.w3c.dom.Element extractStatsOfTeamToXml(Element element, org.w3c.dom.Document doc) {
+		// TODO Auto-generated method stub
+		String country = element.select("div > header > span").text();
+		
+		org.w3c.dom.Element team = doc.createElement("team");
+		team.setAttribute("name", country);
+		
+		org.w3c.dom.Element players = doc.createElement("players");
+		Elements playerHtml = element.select("div > table > tbody > tr");
+		
+		for (Element element2 : playerHtml) {
+			org.w3c.dom.Element player = doc.createElement("player");
+			String  playerName = element2.select("td.name").text();
+			String playerPos = element2.select("td.pos").text();
+			String playerMinute = element2.select("td.min").text();
+			String playerPoints = element2.select("td.pts").text();
+			String playerFieldGoalsMadeAll = element2.select("td.field-goals > span.made-all").text();
+			String playerFieldGoalsPercent = element2.select("td.field-goals > span.percent").text();
+			String playerFieldGoals2MadeAll = element2.select("td.field-goals-2p > span.made-all").text();
+			String playerFieldGoals2Percent = element2.select("td.field-goals-2p > span.percent").text();
+			String playerFieldGoals3MadeAll = element2.select("td.field-goals-3p > span.made-all").text();
+			String playerFieldGoals3Percent = element2.select("td.field-goals-3p > span.percent").text();
+			String playerFreeThrowMadeAll = element2.select("td.free-throw > span.made-all").text();
+			String playerFreeThrowPercent = element2.select("td.free-throw > span.percent").text();
+			String playerRebOffence = element2.select("td.reb-offence").text();
+			String playerRebDefence = element2.select("td.reb-defence").text();
+			String playerRebTotal = element2.select("td.reb-total").text();
+			String playerAssists = element2.select("td.assists").text();
+			String playerPersonalFouls = element2.select("td.personal-fouls").text();
+			String playerTurnovers = element2.select("td.turnovers").text();
+			String playerSteals = element2.select("td.steals").text();
+			String playerBlockShots = element2.select("td.block-shots").text();
+			String playerPlusMinus = element2.select("td.plus-minus").text();
+			String playerEfficiency = element2.select("td.efficiency").text();
+			
+			player.setAttribute("efficiency", playerEfficiency);
+			player.setAttribute("plusminus", playerPlusMinus);
+			player.setAttribute("blockshots", playerBlockShots);
+			player.setAttribute("steals", playerSteals);
+			player.setAttribute("turnovers", playerTurnovers);
+			player.setAttribute("assists", playerAssists);
+			player.setAttribute("personal-fouls", playerPersonalFouls);
+			player.setAttribute("reb-total", playerRebTotal);
+			player.setAttribute("reb-defence", playerRebDefence);
+			player.setAttribute("reb-offence", playerRebOffence);
+			player.setAttribute("field-free-throw-percent", playerFreeThrowPercent);
+			player.setAttribute("field-free-throw-made", playerFreeThrowMadeAll);
+			player.setAttribute("field-goals3-percent", playerFieldGoals3Percent);
+			player.setAttribute("field-goals3-made", playerFieldGoals3MadeAll);
+			player.setAttribute("field-goals2-percent", playerFieldGoals2Percent);
+			player.setAttribute("field-goals2-made", playerFieldGoals2MadeAll);
+			player.setAttribute("field-goals-percent", playerFieldGoalsPercent);
+			player.setAttribute("field-goals-made", playerFieldGoalsMadeAll);
+			player.setAttribute("pts", playerPoints);
+			player.setAttribute("name", playerName);
+			player.setAttribute("pos", playerPos);
+			
+			player.setAttribute("minOriginal", playerMinute);
+			if(playerMinute.contains("No Jug")) {
+				playerMinute = "0";
+			}
+			player.setAttribute("min", playerMinute);
+		
+			players.appendChild(player);
+			
+			
+		}
+		team.appendChild(players);
+		
+		return team;
 	}
 	
 	private static org.w3c.dom.Element extractOffensiveHtmlToXml(Elements elementos,org.w3c.dom.Document doc) {

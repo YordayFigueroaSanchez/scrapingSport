@@ -1,0 +1,12 @@
+web
+http://www.fiba.basketball/es/basketballworldcup/2019/games
+
+seleccionamos el juego
+
+en la pagina del juego clic en (MARCADOR)
+
+usando chrome usamos la funcionalidad F12 para que nos muestre el codigo fuente de la page
+
+compiamos el elemento html
+
+lo pegamos en un editor de texto y lo guardamos con el nombre que deseemos.
